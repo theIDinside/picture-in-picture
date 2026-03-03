@@ -316,9 +316,10 @@ The {{requestPictureInPicture()}} method steps are:
     and return |p|.
 7. If <a>this</a>'s {{HTMLVideoElement/disablePictureInPicture}} is true,
     the user agent MAY reject |p| with an {{InvalidStateError}} exception and return |p|.
-8. If {{pictureInPictureElement}} is `null` and the <a>relevant global object</a>
-    of <a>this</a> does not have <a>transient activation</a>, reject |p| with a
-    {{NotAllowedError}} exception and return |p|.
+8. If {{pictureInPictureElement}} is `null`:
+    1. If <a>this</a>'s <a>relevant global object</a> does not have a <a>transient activation</a>
+        reject |p| with a {{NotAllowedError}} exception and return |p|.
+    2. [=Consume user activation=] given <a>this</a>'s <a>relevant global object</a>.
 9. Return |promise|, and run the remaining steps |in parallel|:
     1. If <a>this</a> is {{pictureInPictureElement}}:
         1. Queue a global task on the <a>media element event task source</a> given |global| to [=/resolve=] |p| with

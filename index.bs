@@ -313,7 +313,7 @@ The {{requestPictureInPicture()}} method steps are:
 2. Let |global| be <a>this</a>'s <a>relevant global object</a>.
 3. If <a>Picture-in-Picture support</a> is `false`, return [=a promise rejected with=] {{NotSupportedError}} {{DOMException}}.
 4. If [=this=]'s [=node document=] is not [=allowed to use=] the [=policy-controlled feature=]
-    named `"picture-in-picture"`, reject |p| with a {{SecurityError}} exception and 
+    named `"picture-in-picture"`, reject |p| with a {{SecurityError}} {{DOMException}} and 
     return |p|.
 5. If <a>this</a>'s {{readyState}} attribute is {{HAVE_NOTHING}}, reject |p| with an
     {{InvalidStateError}} exception and return |p|.

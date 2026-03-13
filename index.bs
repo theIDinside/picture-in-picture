@@ -351,8 +351,8 @@ The {{requestPictureInPicture()}} method steps are:
             Picture-in-Picture sessions=].
         3. If {{pictureInPictureElement}} is [=fullscreenElement=], it is RECOMMENDED to [=exit
            fullscreen=].
-        4. [=Fire an event=] named {{enterpictureinpicture}} using {{PictureInPictureEvent}} at
-            the |video| with its {{bubbles}} attribute initialized to `true` and its
+        4. [=Fire an event=] named {{enterpictureinpicture}} using {{PictureInPictureEvent}} at the
+            [=this=] with its {{bubbles}} attribute initialized to `true` and its
             {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to
             [=Picture-in-Picture window=].
         5. [=/Resolve=] |p| with the [=Picture-in-Picture window=] associated with

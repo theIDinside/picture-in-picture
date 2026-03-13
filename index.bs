@@ -309,42 +309,45 @@ partial interface HTMLVideoElement {
 
 The {{requestPictureInPicture()}} method steps are:
 
-1. Let |p| be [=a new promise=] created in [=this=]'s [=relevant realm=].
-2. Let |global| be <a>this</a>'s <a>relevant global object</a>.
-3. If <a>Picture-in-Picture support</a> is `false`, return [=a promise rejected with=] {{NotSupportedError}} {{DOMException}}.
-4. If [=this=]'s [=node document=] is not [=allowed to use=] the [=policy-controlled feature=]
-    named `"picture-in-picture"`, reject |p| with a {{SecurityError}} {{DOMException}} and 
-    return |p|.
-5. If <a>this</a>'s {{readyState}} attribute is {{HAVE_NOTHING}}, reject |p| with an
-    {{InvalidStateError}} exception and return |p|.
-6. If <a>this</a> has no video track, reject |p| with an {{InvalidStateError}} exception 
-    and return |p|.
-7. If <a>this</a>'s {{HTMLVideoElement/disablePictureInPicture}} is true,
-    the user agent MAY reject |p| with an {{InvalidStateError}} exception and return |p|.
-8. If {{pictureInPictureElement}} is `null`:
-    1. If <a>this</a>'s <a>relevant global object</a> does not have a <a>transient activation</a>
-        reject |p| with a {{NotAllowedError}} exception and return |p|.
-    2. [=Consume user activation=] given <a>this</a>'s <a>relevant global object</a>.
-9. Return |promise|, and run the remaining steps |in parallel|:
-    1. If <a>this</a> is {{pictureInPictureElement}}:
-        1. Queue a global task on the <a>media element event task source</a> given |global| to [=/resolve=] |p| with
-            the <a>Picture-in-Picture window</a> associated with {{pictureInPictureElement}}
+1. If [=Picture-in-Picture support=] is `false`, return [=a promise rejected with=] {{NotSupportedError}} {{DOMException}}.
+2. If [=this=]'s [=node document=] is not [=allowed to use=] the [=policy-controlled feature=]
+    named `"picture-in-picture"`, return [=a promise rejected with=] {{SecurityError}} {{DOMException}}.
+3. If [=this=]'s {{readyState}} attribute is {{HAVE_NOTHING}}, return [=a promise rejected with=] with {{InvalidStateError}} {{DOMException}}
+4. If [=this=] has no video track, return [=a promise rejected with=] {{InvalidStateError}} {{DOMException}}
+5. If [=this=]'s {{HTMLVideoElement/disablePictureInPicture}} is true, the user agent MAY return [=a
+   promise rejected with=] {{InvalidStateError}} {{DOMException}}.
+6. If {{pictureInPictureElement}} is `null`:
+    1. If [=this=]'s [=relevant global object=] does not have a [=transient activation=] return [=a
+       promise rejected with=] {{NotAllowedError}} {{DOMException}}
+    2. [=Consume user activation=] given [=this=]'s [=relevant global object=].
+7. Let |global| be [=this=]'s [=relevant global object=].
+8. Let |p| be [=a new promise=] created in [=this=]'s [=relevant realm=].
+9. Return |p|, and run the remaining steps |in parallel|:
+    1. If [=this=] is {{pictureInPictureElement}}:
+        1. Queue a global task on the [=media element event task source=] given |global| to
+            [=/resolve=] |p| with the [=Picture-in-Picture window=] associated with
+            {{pictureInPictureElement}}
         2. abort these steps
-    2. Let <dfn>Picture-in-Picture window</dfn> be a new instance of
-        {{PictureInPictureWindow}} associated with <a>this</a>.
+    2. Let <dfn>Picture-in-Picture window</dfn> be a new instance of {{PictureInPictureWindow}}
+        associated with [=this=].
 
-        Note: A user agent may abort when it deems necessary, e.g. due to an error. When doing so it must queue a global task on the <a>media element event task source</a> given |global| and reject the promise with an {{InvalidStateError}}.
-    3. Queue a global task on the <a>media element event task source</a> given |global|, to perform the following steps:
-        1. Set <a>this</a>'s <a>node document</a>'s <a>Picture-in-Picture element</a> to <a>this</a>.
-        2. [=list/Append=] <a>relevant settings object</a>'s <a>origin</a> to
-            <a>initiators of active Picture-in-Picture sessions</a>.
-        3. If {{pictureInPictureElement}} is <a>fullscreenElement</a>, it is
-            RECOMMENDED to <a>exit fullscreen</a>.
-        4. <a>Fire an event</a> named {{enterpictureinpicture}} using {{PictureInPictureEvent}} at the
-            |video| with its {{bubbles}} attribute initialized to `true` and its
+        Note: A user agent may abort when it deems necessary, e.g. due to an error.
+    3. In case where user agent aborted:
+        1. [=Queue a global task=] on the [=media element event task source=] given |global| to
+            [=/reject=] |p| with {{InvalidStateError}} {{DOMException}}
+        2. abort these steps
+    4. [=Queue a global task=] on the [=media element event task source=] given |global|, to perform
+        the following steps:
+        1. Set [=this=]'s [=node document=]'s [=Picture-in-Picture element=] to [=this=].
+        2. [=list/Append=] [=relevant settings object=]'s [=origin=] to [=initiators of active
+            Picture-in-Picture sessions=].
+        3. If {{pictureInPictureElement}} is [=fullscreenElement=], it is RECOMMENDED to [=exit
+           fullscreen=].
+        4. [=Fire an event=] named {{enterpictureinpicture}} using {{PictureInPictureEvent}} at
+            the |video| with its {{bubbles}} attribute initialized to `true` and its
             {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to
-            <a>Picture-in-Picture window</a>.
-        5. [=/Resolve=] |p| with the <a>Picture-in-Picture window</a> associated with 
+            [=Picture-in-Picture window=].
+        5. [=/Resolve=] |p| with the [=Picture-in-Picture window=] associated with
             {{pictureInPictureElement}}.
 
 

@@ -318,7 +318,7 @@ The {{requestPictureInPicture()}} method steps are:
 5. If [=this=]'s {{HTMLVideoElement/disablePictureInPicture}} is true, the user agent MAY return [=a
    promise rejected with=] {{InvalidStateError}} {{DOMException}}.
 6. If {{pictureInPictureElement}} is `null`:
-    1. If [=this=]'s [=relevant global object=] does not have a [=transient activation=] return [=a
+    1. If [=this=]'s [=relevant global object=] does not have a [=transient activation=], then return [=a
        promise rejected with=] {{NotAllowedError}} {{DOMException}}
     2. [=Consume user activation=] given [=this=]'s [=relevant global object=].
 7. Let |global| be [=this=]'s [=relevant global object=].

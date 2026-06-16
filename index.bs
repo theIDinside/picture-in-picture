@@ -221,21 +221,32 @@ Picture-in-Picture window.
 
 ## Exit Picture-in-Picture ## {#exit-pip}
 
-When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked,
-the user agent MUST run the following steps:
+When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked given |doc| and promise-or-null
+|p|, run these steps:
 
-1. If {{pictureInPictureElement}} is `null`, throw a {{InvalidStateError}} and
-    abort these steps.
-2. Run the <a>close window algorithm</a> with the <a>Picture-in-Picture
-    window</a> associated with {{pictureInPictureElement}}.
-3. <a>Queue a task</a> to <a>fire an event</a> named
-    {{leavepictureinpicture}} using {{PictureInPictureEvent}} at the
-    |video| with its {{bubbles}} attribute initialized to `true` and its
-    {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to
-    <a>Picture-in-Picture window</a> associated with {{pictureInPictureElement}}.
-4. Unset {{pictureInPictureElement}}.
-5. Remove one <a>item</a> matching <a>relevant settings object</a>'s <a>origin</a> from
-    <a>initiators of active Picture-in-Picture sessions</a>.
+1. Assert that |doc|'s [=Picture-in-Picture element=] is not `null`.
+2. Assert that these steps are running on the [=picture-in-picture parallel queue=].
+
+    Note: This algorithm is called from {{exitPictureInPicture}} and {{requestPictureInPicture}}.
+    The document unloading steps have to be structured differently due to running on the event loop
+    and can therefore not call this algorithm.
+3. Let |global| be |doc|'s [=relevant global object=].
+4. Run the <a>close window algorithm</a> with the <a>Picture-in-Picture window</a> associated with
+   |doc|'s [=Picture-in-Picture element=].
+5. [=Queue a global task=] on the [=media element event task source=] given |global|, to perform the
+   following steps:
+    1. If |doc|'s [=Picture-in-Picture element=] is `null`:
+        1. [=/Resolve=] |p| if |p| is not `null`.
+        2. Return.
+    2. Let |element| be |doc|'s [=Picture-in-Picture element=].
+    3. Set |doc|'s [=Picture-in-Picture element=] to `null`.
+    4. <a>Fire an event</a> named {{leavepictureinpicture}} using {{PictureInPictureEvent}} at the
+       |element| with its {{bubbles}} attribute initialized to `true` and its
+       {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to
+       <a>Picture-in-Picture window</a> associated with |element|.
+    5. Remove one <a>item</a> matching <a>relevant settings object</a>'s <a>origin</a> from
+       <a>initiators of active Picture-in-Picture sessions</a>.
+    6. [=/Resolve=] |p| if |p| is not `null`.
 
 It is NOT RECOMMENDED that the video playback state changes when the <a>exit
 Picture-in-Picture algorithm</a> is invoked. The website SHOULD be in control
@@ -340,18 +351,19 @@ The {{requestPictureInPicture()}} method steps <dfn export>request Picture-in-Pi
             [=/reject=] |p| with {{InvalidStateError}} {{DOMException}}.
         2. Abort these steps.
     4. Let |pipWindow| be a new instance of {{PictureInPictureWindow}} that represents [=this=]'s associated [=Picture-in-Picture window=].
-    5. [=Queue a global task=] on the [=media element event task source=] given |global|, to perform
-        the following steps:
-        1. If {{pictureInPictureElement}} is not `null`, run the [=exit Picture-in-Picture algorithm=].
-        2. Set |doc|'s [=Picture-in-Picture element=] to [=this=].
-        3. [=list/Append=] [=relevant settings object=]'s [=origin=] to [=initiators of active
-            Picture-in-Picture sessions=].
-        4. If [=this=] is [=fullscreenElement=], [=exit fullscreen=].
-        5. [=Fire an event=] named {{enterpictureinpicture}} using {{PictureInPictureEvent}} at
-            [=this=] with its {{bubbles}} attribute initialized to `true` and its
-            {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to
-            [=Picture-in-Picture window=].
-        6. [=/Resolve=] |p| with |pipWindow|.
+    5. If |doc|'s [=Picture-in-Picture element=] is not `null`, run the [=exit Picture-in-Picture
+       algorithm=] given |doc| and `null`.
+    6. [=Queue a global task=] on the [=media element event task source=] given |global|, to perform
+       the following steps:
+        1. Set |doc|'s [=Picture-in-Picture element=] to [=this=].
+        2. [=list/Append=] [=relevant settings object=]'s [=origin=] to [=initiators of active
+           Picture-in-Picture sessions=].
+        3. If [=this=] is [=fullscreenElement=], [=exit fullscreen=].
+        4. [=Fire an event=] named {{enterpictureinpicture}} using {{PictureInPictureEvent}} at
+           [=this=] with its {{bubbles}} attribute initialized to `true` and its
+           {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to
+           [=Picture-in-Picture window=].
+        5. [=/Resolve=] |p| with |pipWindow|.
 
 
 ## Extensions to <code>Document</code> ## {#document-extensions}
@@ -372,14 +384,19 @@ The {{pictureInPictureEnabled}} attribute's getter must return `true` if
 <dfn>Picture-in-Picture support</dfn> is `false` if there's a user preference
 that disables it or a platform limitation. It is `true` otherwise.
 
-The {{exitPictureInPicture()}} method, when invoked, MUST
-return <a>a new promise</a> |promise| and run the following steps <a>in
-parallel</a>:
+The {{exitPictureInPicture()}} method, when invoked, MUST return <a>a new promise</a> and run the
+following steps:
 
-1. Run the <a>exit Picture-in-Picture algorithm</a>.
-2. If the previous step threw an exception, reject |promise| with that
-    exception and abort these steps.
-3. [=/Resolve=] |promise|.
+1. If [=this=]'s [=Picture-in-Picture element=] is `null`, return [=a promise rejected with=]
+   {{InvalidStateError}} {{DOMException}}.
+2. Let |p| be [=a new promise=] created in [=this=]'s [=relevant realm=].
+3. Return |p|, and [=enqueue the following steps=] to [=this=]'s [=picture-in-picture parallel
+   queue=]:
+    1. If [=this=]'s [=Picture-in-Picture element=] is `null`:
+        1. [=Queue a global task=] on the [=media element event task source=] given [=this=]'s
+           [=relevant global object=] to [=/resolve=] |p|.
+        2. Return.
+    2. Run the <a>exit Picture-in-Picture algorithm</a> given [=this=] and |p|.
 
 ## Extension to <code>DocumentOrShadowRoot</code> ## {#documentorshadowroot-extension}
 

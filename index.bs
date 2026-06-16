@@ -232,20 +232,20 @@ When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked given |doc| and
     and can therefore not call this algorithm.
 3. Let |global| be |doc|'s [=relevant global object=].
 4. Run the <a>close window algorithm</a> with the <a>Picture-in-Picture window</a> associated with
-   |doc|'s [=Picture-in-Picture element=].
+    |doc|'s [=Picture-in-Picture element=].
 5. [=Queue a global task=] on the [=media element event task source=] given |global|, to perform the
-   following steps:
+    following steps:
     1. If |doc|'s [=Picture-in-Picture element=] is `null`:
         1. [=/Resolve=] |p| if |p| is not `null`.
         2. Return.
     2. Let |element| be |doc|'s [=Picture-in-Picture element=].
     3. Set |doc|'s [=Picture-in-Picture element=] to `null`.
     4. <a>Fire an event</a> named {{leavepictureinpicture}} using {{PictureInPictureEvent}} at the
-       |element| with its {{bubbles}} attribute initialized to `true` and its
-       {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to
-       <a>Picture-in-Picture window</a> associated with |element|.
+        |element| with its {{bubbles}} attribute initialized to `true` and its
+        {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to
+        <a>Picture-in-Picture window</a> associated with |element|.
     5. Remove one <a>item</a> matching <a>relevant settings object</a>'s <a>origin</a> from
-       <a>initiators of active Picture-in-Picture sessions</a>.
+        <a>initiators of active Picture-in-Picture sessions</a>.
     6. [=/Resolve=] |p| if |p| is not `null`.
 
 It is NOT RECOMMENDED that the video playback state changes when the <a>exit
@@ -352,17 +352,17 @@ The {{requestPictureInPicture()}} method steps <dfn export>request Picture-in-Pi
         2. Abort these steps.
     4. Let |pipWindow| be a new instance of {{PictureInPictureWindow}} that represents [=this=]'s associated [=Picture-in-Picture window=].
     5. If |doc|'s [=Picture-in-Picture element=] is not `null`, run the [=exit Picture-in-Picture
-       algorithm=] given |doc| and `null`.
+        algorithm=] given |doc| and `null`.
     6. [=Queue a global task=] on the [=media element event task source=] given |global|, to perform
-       the following steps:
+        the following steps:
         1. Set |doc|'s [=Picture-in-Picture element=] to [=this=].
         2. [=list/Append=] [=relevant settings object=]'s [=origin=] to [=initiators of active
-           Picture-in-Picture sessions=].
+            Picture-in-Picture sessions=].
         3. If [=this=] is [=fullscreenElement=], [=exit fullscreen=].
         4. [=Fire an event=] named {{enterpictureinpicture}} using {{PictureInPictureEvent}} at
-           [=this=] with its {{bubbles}} attribute initialized to `true` and its
-           {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to
-           [=Picture-in-Picture window=].
+            [=this=] with its {{bubbles}} attribute initialized to `true` and its
+            {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to
+            [=Picture-in-Picture window=].
         5. [=/Resolve=] |p| with |pipWindow|.
 
 
@@ -388,13 +388,13 @@ The {{exitPictureInPicture()}} method, when invoked, MUST return <a>a new promis
 following steps:
 
 1. If [=this=]'s [=Picture-in-Picture element=] is `null`, return [=a promise rejected with=]
-   {{InvalidStateError}} {{DOMException}}.
+    {{InvalidStateError}} {{DOMException}}.
 2. Let |p| be [=a new promise=] created in [=this=]'s [=relevant realm=].
 3. Return |p|, and [=enqueue the following steps=] to [=this=]'s [=picture-in-picture parallel
-   queue=]:
+    queue=]:
     1. If [=this=]'s [=Picture-in-Picture element=] is `null`:
         1. [=Queue a global task=] on the [=media element event task source=] given [=this=]'s
-           [=relevant global object=] to [=/resolve=] |p|.
+            [=relevant global object=] to [=/resolve=] |p|.
         2. Return.
     2. Run the <a>exit Picture-in-Picture algorithm</a> given [=this=] and |p|.
 

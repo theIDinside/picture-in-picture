@@ -221,7 +221,7 @@ Picture-in-Picture window.
 
 ## Exit Picture-in-Picture ## {#exit-pip}
 
-When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked given |doc| and promise-or-null
+When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked given |doc| and nullable {{Promise}}
 |p|, run these steps:
 
 1. Assert that |doc|'s [=Picture-in-Picture element=] is not `null`.

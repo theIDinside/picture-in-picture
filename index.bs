@@ -358,7 +358,7 @@ The {{requestPictureInPicture()}} method steps <dfn export>request Picture-in-Pi
         1. Set |doc|'s [=Picture-in-Picture element=] to [=this=].
         2. [=list/Append=] [=relevant settings object=]'s [=origin=] to [=initiators of active
             Picture-in-Picture sessions=].
-        3. If [=this=] is [=fullscreenElement=], [=exit fullscreen=].
+        3. If [=this=] is [=fullscreenElement=], then [=exit fullscreen=].
         4. [=Fire an event=] named {{enterpictureinpicture}} using {{PictureInPictureEvent}} at
             [=this=] with its {{bubbles}} attribute initialized to `true` and its
             {{PictureInPictureEvent/pictureInPictureWindow}} attribute initialized to

@@ -380,8 +380,7 @@ The {{pictureInPictureEnabled}} attribute's getter must return `true` if
 <dfn>Picture-in-Picture support</dfn> is `false` if there's a user preference
 that disables it or a platform limitation. It is `true` otherwise.
 
-The {{exitPictureInPicture()}} method, when invoked, MUST return <a>a new promise</a> and run the
-following steps:
+The {{exitPictureInPicture()}} method, when invoked, runs the following steps:
 
 1. If [=this=]'s [=Picture-in-Picture element=] is `null`, return [=a promise rejected with=]
     {{InvalidStateError}} {{DOMException}}.

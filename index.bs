@@ -224,12 +224,8 @@ Picture-in-Picture window.
 When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked given |doc| and nullable {{Promise}}
 |p|, run these steps:
 
-1. Assert that |doc|'s [=Picture-in-Picture element=] is not `null`.
-2. Assert that these steps are running on the [=picture-in-picture parallel queue=].
-
-    Note: This algorithm is called from {{exitPictureInPicture}} and {{requestPictureInPicture}}.
-    The document unloading steps have to be structured differently due to running on the event loop
-    and can therefore not call this algorithm.
+1. [=Assert=] that |doc|'s [=Picture-in-Picture element=] is not `null`.
+2. [=Assert=] that these steps are running on the [=picture-in-picture parallel queue=].
 3. Let |global| be |doc|'s [=relevant global object=].
 4. Run the <a>close window algorithm</a> with the <a>Picture-in-Picture window</a> associated with
     |doc|'s [=Picture-in-Picture element=].

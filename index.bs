@@ -221,15 +221,14 @@ Picture-in-Picture window.
 
 ## Exit Picture-in-Picture ## {#exit-pip}
 
-When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked given |doc| and nullable
+When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked given |doc|,  and nullable
 {{Promise}} |p|, run these steps:
 
-1. [=Assert=] that |doc|'s [=Picture-in-Picture element=] is not `null`.
-2. [=Assert=] that these steps are running on the [=picture-in-picture parallel queue=].
-3. Let |global| be |doc|'s [=relevant global object=].
-4. Run the <a>close window algorithm</a> with the <a>Picture-in-Picture window</a> associated with
+1. [=Assert=] that these steps are running on the [=picture-in-picture parallel queue=].
+2. Let |global| be |doc|'s [=relevant global object=].
+3. Run the <a>close window algorithm</a> with the <a>Picture-in-Picture window</a> associated with
     |doc|'s [=Picture-in-Picture element=].
-5. [=Queue a global task=] on the [=media element event task source=] given |global|, to perform the
+4. [=Queue a global task=] on the [=media element event task source=] given |global|, to perform the
     following steps:
     1. If |doc| is not [=fully active=] or |doc|'s [=Picture-in-Picture element=] is `null`:
         1. If |p| is not `null`, [=/resolve=] |p| with undefined.
@@ -250,8 +249,16 @@ of the experience if it is website initiated. However, the user agent MAY expose
 Picture-in-Picture window controls that change video playback state (e.g.,
 pause).
 
-As one of the <a>unloading document cleanup steps</a>, run the <a>exit
-Picture-in-Picture algorithm</a>.
+### Unloading steps ### {#unloading-steps}
+As one of the <a>unloading document cleanup steps</a> given |doc| run the following steps:
+1. If |doc|'s [=Picture-in-Picture element=] is `null`, return.
+2. Let |window| be the <a>Picture-in-Picture window</a> associated with |doc|'s
+    [=Picture-in-Picture element=].
+3. Set |doc|'s [=Picture-in-Picture element=] to `null`.
+4. Remove one <a>item</a> matching <a>relevant settings object</a>'s <a>origin</a> from
+    <a>initiators of active Picture-in-Picture sessions</a>.
+5. [=Enqueue the following steps=] to |doc|'s <a>picture-in-picture parallel queue</a>:
+    1. Run the <a>close window algorithm</a> with |window|.
 
 ## Disable Picture-in-Picture ## {#disable-pip}
 

@@ -221,8 +221,8 @@ Picture-in-Picture window.
 
 ## Exit Picture-in-Picture ## {#exit-pip}
 
-When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked given |doc| and nullable {{Promise}}
-|p|, run these steps:
+When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked given |doc| and nullable
+{{Promise}} |p|, run these steps:
 
 1. [=Assert=] that |doc|'s [=Picture-in-Picture element=] is not `null`.
 2. [=Assert=] that these steps are running on the [=picture-in-picture parallel queue=].
@@ -231,7 +231,7 @@ When the <dfn>exit Picture-in-Picture algorithm</dfn> is invoked given |doc| and
     |doc|'s [=Picture-in-Picture element=].
 5. [=Queue a global task=] on the [=media element event task source=] given |global|, to perform the
     following steps:
-    1. If |doc|'s [=Picture-in-Picture element=] is `null`:
+    1. If |doc| is not [=fully active=] or |doc|'s [=Picture-in-Picture element=] is `null`:
         1. If |p| is not `null`, [=/resolve=] |p| with undefined.
         2. Return.
     2. Let |element| be |doc|'s [=Picture-in-Picture element=].
@@ -278,8 +278,12 @@ the user agent MAY run these steps:
 
 ## Interaction with Fullscreen ## {#fullscreen}
 
-It is RECOMMENDED to run the <a>exit Picture-in-Picture algorithm</a> when the
-{{pictureInPictureElement}} <a>fullscreen flag</a> is set.
+It is RECOMMENDED that when a [=Picture-in-Picture element=]'s <a>fullscreen flag</a> is set, the
+user agent runs these steps:
+
+1. Let |doc| be the [=Picture-in-Picture element=]'s [=node document=].
+2. [=Enqueue the following steps=] to |doc|'s <a>picture-in-picture parallel queue</a>:
+    1. Run the <a>exit Picture-in-Picture algorithm</a> given |doc| and `null`.
 
 ## Interaction with Page Visibility ## {#page-visibility}
 
@@ -382,8 +386,8 @@ that disables it or a platform limitation. It is `true` otherwise.
 
 The {{exitPictureInPicture()}} method, when invoked, runs the following steps:
 
-1. If [=this=]'s [=Picture-in-Picture element=] is `null`, return [=a promise rejected with=]
-    {{InvalidStateError}} {{DOMException}}.
+1. If [=this=]'s [=Picture-in-Picture element=] is `null` or [=this=] is not [=fully active=],
+    return [=a promise rejected with=] {{InvalidStateError}} {{DOMException}}.
 2. Let |p| be [=a new promise=] created in [=this=]'s [=relevant realm=].
 3. Return |p|, and [=enqueue the following steps=] to [=this=]'s [=picture-in-picture parallel
     queue=]:
